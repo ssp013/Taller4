@@ -13,12 +13,16 @@ public class Reserva {
 	 * 
 	 */
 	private String codReserva;
+	private String codCliente;
+	private String numeroHabitacion;
 	private String fechaInicio;
 	private String fechaTermino;
 	
-	public Reserva(String codReserva,String fechaInicio,String fechaTermino) {
+	public Reserva(String codReserva,String codCliente,String numeroHabitacion,String fechaInicio,String fechaTermino) {
 		// TODO Auto-generated constructor stub
 		this.codReserva = codReserva;
+		this.codCliente = codCliente;
+		this.numeroHabitacion = numeroHabitacion;
 		this.fechaInicio = fechaInicio;
 		this.fechaTermino = fechaTermino;
 	}
@@ -63,6 +67,34 @@ public class Reserva {
 	 */
 	public void setFechaTermino(String fechaTermino) {
 		this.fechaTermino = fechaTermino;
+	}
+
+	/**
+	 * @return the codCliente
+	 */
+	public String getCodCliente() {
+		return codCliente;
+	}
+
+	/**
+	 * @param codCliente the codCliente to set
+	 */
+	public void setCodCliente(String codCliente) {
+		this.codCliente = codCliente;
+	}
+
+	/**
+	 * @return the numeroHabitacion
+	 */
+	public String getNumeroHabitacion() {
+		return numeroHabitacion;
+	}
+
+	/**
+	 * @param numeroHabitacion the numeroHabitacion to set
+	 */
+	public void setNumeroHabitacion(String numeroHabitacion) {
+		this.numeroHabitacion = numeroHabitacion;
 	}
 	
 
