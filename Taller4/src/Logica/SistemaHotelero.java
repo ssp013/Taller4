@@ -10,7 +10,7 @@ public interface SistemaHotelero {
 	public boolean crearOtroTrabajador(String CodGerente, String nombre, String apellido,String telefono, String correo, int sueldo);
 	//RFS1
 	public boolean ExisteReserva(String codReserva);
-	public boolean existePersona(String nombre, String apellido);	
+	public String existePersona(String nombre, String apellido, String telefono);	
 	public int[] HabitacionesDisponibles( String fechaInicio, String fechaTermino);
 	public String detallesHabitaciones(int[]lista);
 	public boolean crearReserva(String codCliente,int numeroHabitacion, int fechaInicio, int fechaTermino);

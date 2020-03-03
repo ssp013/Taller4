@@ -52,9 +52,9 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
 		return false;
 	}
 	@Override
-	public boolean existePersona(String nombre, String apellido) {
-		// TODO Auto-generated method stub
-		return false;
+	public String existePersona(String nombre, String apellido, String telefono) {
+		String code = null;
+		return code;
 	}
 	@Override
 	public int[] HabitacionesDisponibles(String fechaInicio, String fechaTermino) {
