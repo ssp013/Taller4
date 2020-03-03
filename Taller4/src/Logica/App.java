@@ -1,9 +1,10 @@
 package Logica;
-
+import Dominio.*;
+import ucn.*;
 public class App {
 
-	public App() {
-		// TODO Auto-generated constructor stub
-	}
-
+public static void main(String[]args) {
+	SistemaHotelero sistema = new SistemaHoteleroImpl();
+	
+}
 }

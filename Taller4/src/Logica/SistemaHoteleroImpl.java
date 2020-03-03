@@ -1,21 +1,20 @@
 package Logica;
-
 import java.util.ArrayList;
-import java.util.List;
-
+import java.util.LinkedList;
 import Dominio.*;
 public class SistemaHoteleroImpl implements SistemaHotelero {
 	private ListaPersonas listapersonas;
-	private List<Habitacion> habitacion;
-
+	private ArrayList<Habitacion>listHabitacion;
+	private  LinkedList <Reserva> listReserva;
 	public SistemaHoteleroImpl() {
-		this.habitacion = new ArrayList<Habitacion>();
-		
-		
+		this.listHabitacion = new ArrayList<Habitacion>();
+		this.listReserva = new LinkedList<Reserva>();
+		this.listapersonas = new ListaPersonas();
 	}
 	@Override
-	public boolean CrearReserbvacion(String codReserva, String codCliente, int fechaInicio, int fechaTermino) {
+	public boolean crearReserva(String codReserva, String codCliente, int fechaInicio, int fechaTermino) {
 		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
