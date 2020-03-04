@@ -2,7 +2,7 @@ package Logica;
 
 public interface SistemaHotelero {
 	//Cargar TXT:
-	public boolean cargarDatosReservaciones(String codReserva, String codCliente,String numeroHabitacion, int fechaInicio, int fechaTermino);
+	public boolean cargarDatosReservaciones(String codReserva, String codCliente,int numeroHabitacion, String fechaInicio, String fechaTermino);
 	public boolean cargarDatosHabitaciones(int numeroHabitacion, int valorDia, String tipo);
 	public boolean crearCliente(String CodCliente, String nombre, String apellido, String telefono);
 	public boolean crearRecepcionista(String CodRecepcionista, String nombre, String apellido,String telefono, String correo, int sueldo);
@@ -13,7 +13,7 @@ public interface SistemaHotelero {
 	public String existePersona(String nombre, String apellido, String telefono);	
 	public int[] HabitacionesDisponibles( String fechaInicio, String fechaTermino);
 	public String detallesHabitaciones(int[]lista);
-	public boolean crearReserva(String codCliente,int numeroHabitacion, int fechaInicio, int fechaTermino);
+	public boolean crearReserva(String codCliente,int numeroHabitacion, String fechaInicio, String fechaTermino);
 	
 	
 	

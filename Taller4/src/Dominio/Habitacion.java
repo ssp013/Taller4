@@ -8,13 +8,13 @@ package Dominio;
  *
  */
 public class Habitacion {
-	private String NumHabitacion;
+	private int NumHabitacion;
 	private int valorDia;
 	private String tipo;
 	/**
 	 * 
 	 */
-	public Habitacion(String NumHabitacion,int valorDia,String tipo) {
+	public Habitacion(int NumHabitacion,int valorDia,String tipo) {
 		// TODO Auto-generated constructor stub
 		this.NumHabitacion = NumHabitacion;
 		this.valorDia = valorDia;
@@ -24,13 +24,13 @@ public class Habitacion {
 	/**
 	 * @return the numHabitacion
 	 */
-	public String getNumHabitacion() {
+	public int getNumHabitacion() {
 		return NumHabitacion;
 	}
 	/**
 	 * @param numHabitacion the numHabitacion to set
 	 */
-	public void setNumHabitacion(String numHabitacion) {
+	public void setNumHabitacion(int numHabitacion) {
 		NumHabitacion = numHabitacion;
 	}
 	/**

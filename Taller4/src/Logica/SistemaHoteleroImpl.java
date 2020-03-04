@@ -1,10 +1,14 @@
 package Logica;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import Dominio.*;
 public class SistemaHoteleroImpl implements SistemaHotelero {
 	private ListaPersonas listapersonas;
 	private ArrayList<Habitacion>listHabitacion;
+	
 	private  LinkedList <Reserva> listReserva;
 	public SistemaHoteleroImpl() {
 		this.listHabitacion = new ArrayList<Habitacion>();
@@ -13,8 +17,8 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
 	}
 	
 	@Override
-	public boolean cargarDatosReservaciones(String codReserva, String codCliente, String numeroHabitacion,
-			int fechaInicio, int fechaTermino) {
+	public boolean cargarDatosReservaciones(String codReserva, String codCliente, int numeroHabitacion,
+			String fechaInicio, String fechaTermino) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -53,21 +57,71 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
 	}
 	@Override
 	public String existePersona(String nombre, String apellido, String telefono) {
-		String code = null;
-		return code;
+	
+		Persona p = listapersonas.buscarPersona(nombre, apellido);
+		if(p!=null) {
+			return p.getCodigo();
+		}else {
+			return null;
+		}
+		
 	}
 	@Override
 	public int[] HabitacionesDisponibles(String fechaInicio, String fechaTermino) {
 		// TODO Auto-generated method stub
-		return null;
+		int [] listaDisponibles = new int[1000];
+		/**String[] partes = fechaInicio.split("/");
+		int anoInicio = Integer.parseInt(partes[2]);                
+		int mesInicio =Integer.parseInt(partes[1]);                      
+		int diaInicio = Integer.parseInt(partes[0]);     
+	
+		String[] partes1 = fechaInicio.split("/");
+		int anoTermino = Integer.parseInt(partes1[2]);                
+		int mesTermino =Integer.parseInt(partes1[1]);                      
+		int diaTermino = Integer.parseInt(partes1[0]);
+		
+        boolean presenta = false; 
+        
+        Iterator<Reserva> it = listReserva.iterator();//Iterador
+        while (it.hasNext()) {
+            Reserva reserva = (Reserva) it.next();
+            String fechaInicioReserva = reserva.getFechaInicio();
+            String fechaTerminoReserva = reserva.getFechaTermino();
+      
+    		String[] partes2 = fechaInicioReserva.split("/");
+    		int anoInicioReserva = Integer.parseInt(partes2[2]);                
+    		int mesInicioReserva =Integer.parseInt(partes2[1]);                      
+    		int diaInicioReserva = Integer.parseInt(partes2[0]);     
+    	
+    		String[] partes3 = fechaTerminoReserva.split("/");
+    		int anoTerminoReserva = Integer.parseInt(partes3[2]);                
+    		int mesTerminoReserva =Integer.parseInt(partes3[1]);                      
+    		int diaTerminoReserva = Integer.parseInt(partes3[0]);
+    		}
+    		**/
+    		//condicional:
+        
+		return listaDisponibles;
 	}
 	@Override
 	public String detallesHabitaciones(int[] lista) {
-		// TODO Auto-generated method stub
-		return null;
+		String r = "";
+		for(int i =0;i<lista.length;i++) {
+			int numeroHabitacionDisponible = lista[i];
+			Iterator<Habitacion> it = listHabitacion.iterator();//Iterator:
+			while(it.hasNext()) {
+				Habitacion hab = (Habitacion) it.next();
+				if(hab!=null) {
+					if(hab.getNumHabitacion() == numeroHabitacionDisponible) {
+						r=r+"* Numero Habitación:"+hab.getNumHabitacion()+" - Valor por día:"+hab.getValorDia()+" - Tipo: "+hab.getTipo()+"\n";
+					}
+				}
+			}
+		}
+		return r;
 	}
 	@Override
-	public boolean crearReserva(String codCliente, int numeroHabitacion, int fechaInicio, int fechaTermino) {
+	public boolean crearReserva(String codCliente, int numeroHabitacion, String fechaInicio, String fechaTermino) {
 		// TODO Auto-generated method stub
 		return false;
 	}
