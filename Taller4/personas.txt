@@ -1,0 +1,11 @@
+C1,Juan,Perez,2323
+C2,Seba,Sanchez,13123
+C3,Tomas,Sandoval,11231
+C4,Maca,Sandivari,2312
+C5,Oscar,Pereira,2232
+C6,Maite,Malloa,323
+C7,Eduardo,Villalobos,2323
+R1,Pedro,Jara,123123,asd@gmail.com,350000
+G1,Juan,Lamas,32342342,fd@gmail.com,2800000
+O1,Sofia,Abarca,312312,dsa@gmail.com,500000
+O2,Nestor,Abarca,312312,dsa@gmail.com,500000

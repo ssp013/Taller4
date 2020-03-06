@@ -25,8 +25,6 @@ public class App {
 				LocalDate today = LocalDate.of(year, month, dayOfMonth);//tira un false..
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 					return true;
-		
-
 				
 			}
 		}
@@ -55,7 +53,7 @@ public class App {
 			   }
 		}
 	}
-	public static int opcion1(SistemaHotelero sistema, int cont){
+	public static int opcion1(SistemaHotelero sistema, int cont) throws ParseException{
 		StdOut.println("Ingrese Nombre: ");
 		String nom = StdIn.readString();
 		StdOut.println("Ingrese Apellido: ");
@@ -65,7 +63,7 @@ public class App {
 		
 		String cod = sistema.existePersona(nom, ap, tel);
 		if(cod != null) {			
-			
+			StdOut.println("Cliente ya existe en su base de datos!");
 			StdOut.println("Ingrese fecha inicio: ");
 			String fechaInicio = StdIn.readString();
 			boolean result = validateDate(fechaInicio);
@@ -90,21 +88,23 @@ public class App {
 				StdOut.println("No hay habitaciones para esa fecha");
 			}else {
 				StdOut.println("Seleccione una de estas habitaciones: ");
+				StdOut.println(resp);
 				int numero = validarInt();
 				boolean op=false;
-				while(op) {
+				while(op==false) {
 					for(int i=0;i<listaDisponible.length;i++) {
-						if(numero==listaDisponible[i]) {
+						if(numero == listaDisponible[i]) {
 							op=true;
 							break;
 						}
 					}
-					if(op) {
+					if(op==false) {
 						StdOut.println("Ingrese de nuevo la habitación!!!");
 						numero = validarInt();
-					}else {
-						StdOut.println("Habitación Nº "+numero+" seleccionada.");
+					}else{
+						StdOut.println("Habitación número: "+numero+" seleccionada!");
 					}
+		
 				}
 				if(sistema.crearReserva(cod, numero, fechaInicio, fechaTermino)) {
 					StdOut.println("Habitación reservada!");
@@ -114,41 +114,58 @@ public class App {
 			}
 		}
 		else {
-			cont +=1;
+			cont++;//8
 			cod ="C"+cont;
 			if(sistema.crearCliente(cod, nom, ap, tel)) {
+				StdOut.println("Cliente nuevo, creado!");
 				//Preguntarmos fechas:
 				StdOut.println("Ingrese fecha inicio: ");
 				String fechaInicio = StdIn.readString();
+				boolean result = validateDate(fechaInicio);
+				while(!result) {
+					StdOut.println("Error! Ingrese fecha inicio (dd/MM/yyyy) :");
+					fechaInicio = StdIn.readString();
+					result = validateDate(fechaInicio);
+				}
+				
 				StdOut.println("Ingrese fecha de salida: ");
 				String fechaTermino = StdIn.readString();
+				boolean result2 = validateDate(fechaTermino);
+				while(!result2) {
+					StdOut.println("Error! Ingrese fecha de salida (dd/MM/yyyy) :");
+					fechaTermino = StdIn.readString();
+					result2 = validateDate(fechaTermino);
+				}
+				
 				int[] listaDisponible = sistema.HabitacionesDisponibles(fechaInicio, fechaTermino);
 				String resp = sistema.detallesHabitaciones(listaDisponible);
 				if(resp.equals("")) {
 					StdOut.println("No hay habitaciones para esa fecha");
 				}else {
 					StdOut.println("Seleccione una de estas habitaciones: ");
+					StdOut.println(resp);
 					int numero = validarInt();
 					boolean op=false;
-					while(op) {
+					while(op==false) {
 						for(int i=0;i<listaDisponible.length;i++) {
-							if(numero==listaDisponible[i]) {
+							if(numero == listaDisponible[i]) {
 								op=true;
 								break;
 							}
 						}
-						if(op) {
+						if(op==false) {
 							StdOut.println("Ingrese de nuevo la habitación!!!");
 							numero = validarInt();
-						}else {
-							StdOut.println("Habitación Nº "+numero+" seleccionada.");
+						}else{
+							StdOut.println("Habitación número: "+numero+" seleccionada!");
 						}
+			
 					}
 					if(sistema.crearReserva(cod, numero, fechaInicio, fechaTermino)) {
 						StdOut.println("Habitación reservada!");
 					}else {
 						StdOut.println("Problemas con su reserva!");
-					}
+					}	
 				}
 			}
 		}
@@ -156,9 +173,14 @@ public class App {
 	}
 	public static void opcion2(SistemaHotelero sistema) {
 		
+		StdOut.println("Ingrese el código del cliente a revisar:");
+		String codCliente = StdIn.readString();
+		StdOut.println(sistema.informacionReservacionCliente(codCliente));
 	}
 	public static void opcion3(SistemaHotelero sistema) {
-		
+		StdOut.println("************* Detalle de los trabajadores ****************");
+		StdOut.println(sistema.DesplegarRemuneraciones());
+		StdOut.println(sistema.DesplegarClientes());
 	}
 	public static void menu(SistemaHotelero sistema) throws IOException, ParseException {
 		StdOut.println("Bienvenidos al sistema hotelero");
@@ -181,7 +203,6 @@ public class App {
         StdOut.println("Gracias por ocupar el sistema hotelero!!\n Adiós!");
 	}
     public static void cargarTxtReservaciones(SistemaHotelero sistema) throws IOException{
-     
         ArchivoEntrada txtReservas = new ArchivoEntrada("Reservaciones.txt");
         while(!txtReservas.isEndFile()){
             Registro reg = txtReservas.getRegistro();
@@ -203,7 +224,6 @@ public class App {
         txtReservas.close();
       
     }
-    
     public static void CargarTxtHabitaciones(SistemaHotelero sistema) throws IOException{
        
         ArchivoEntrada txtHabitaciones = new ArchivoEntrada("habitaciones.txt");
@@ -255,9 +275,10 @@ public class App {
     	}
     }
 	public static void cargarArchivosTXT(SistemaHotelero sistema)throws IOException {
-		cargarTxtReservaciones(sistema);
 		CargarTxtHabitaciones(sistema);
 		CargarTxtPersonas(sistema);
+		cargarTxtReservaciones(sistema);
+		
 	}
 	public static void main(String[]args) throws IOException, ParseException {
 		SistemaHotelero sistema = new SistemaHoteleroImpl();
