@@ -7,6 +7,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import Dominio.*;
+
 import ucn.*;
 public class App {
 	static Scanner sc = new Scanner(System.in);
@@ -53,8 +54,8 @@ public class App {
 			   }
 		}
 	}
-	public static int opcion1(SistemaHotelero sistema, int cont) throws ParseException{
-		StdOut.println("Ingrese Nombre: ");
+	public static int[] opcion1(SistemaHotelero sistema,int [] listaContadores) throws ParseException{
+                StdOut.println("Ingrese Nombre: ");
 		String nom = StdIn.readString();
 		StdOut.println("Ingrese Apellido: ");
 		String ap = StdIn.readString();
@@ -62,7 +63,11 @@ public class App {
 		String tel = StdIn.readString();
 		
 		String cod = sistema.existePersona(nom, ap, tel);
-		if(cod != null) {			
+		if(cod != null) {
+                    
+                    	
+                        listaContadores[1]=listaContadores[1]+1;//3
+                        String codReserva = String.valueOf(listaContadores[1]);
 			StdOut.println("Cliente ya existe en su base de datos!");
 			StdOut.println("Ingrese fecha inicio: ");
 			String fechaInicio = StdIn.readString();
@@ -72,7 +77,7 @@ public class App {
 				fechaInicio = StdIn.readString();
 				result = validateDate(fechaInicio);
 			}
-			
+		
 			StdOut.println("Ingrese fecha de salida: ");
 			String fechaTermino = StdIn.readString();
 			boolean result2 = validateDate(fechaTermino);
@@ -106,7 +111,7 @@ public class App {
 					}
 		
 				}
-				if(sistema.crearReserva(cod, numero, fechaInicio, fechaTermino)) {
+				if(sistema.crearReserva(codReserva,cod, numero, fechaInicio, fechaTermino)) {
 					StdOut.println("Habitación reservada!");
 				}else {
 					StdOut.println("Problemas con su reserva!");
@@ -114,8 +119,10 @@ public class App {
 			}
 		}
 		else {
-			cont++;//8
-			cod ="C"+cont;
+			listaContadores[0]=listaContadores[0]+1;//8
+                        listaContadores[1]=listaContadores[1]+1;//3
+			cod ="C"+String.valueOf(listaContadores[0]);
+            String codReserva = String.valueOf(listaContadores[1]);
 			if(sistema.crearCliente(cod, nom, ap, tel)) {
 				StdOut.println("Cliente nuevo, creado!");
 				//Preguntarmos fechas:
@@ -161,7 +168,7 @@ public class App {
 						}
 			
 					}
-					if(sistema.crearReserva(cod, numero, fechaInicio, fechaTermino)) {
+					if(sistema.cargarDatosReservaciones(codReserva,cod, numero, fechaInicio, fechaTermino)) {
 						StdOut.println("Habitación reservada!");
 					}else {
 						StdOut.println("Problemas con su reserva!");
@@ -169,29 +176,37 @@ public class App {
 				}
 			}
 		}
-		return cont;
+		return listaContadores;
 	}
 	public static void opcion2(SistemaHotelero sistema) {
 		
 		StdOut.println("Ingrese el código del cliente a revisar:");
 		String codCliente = StdIn.readString();
-		StdOut.println(sistema.informacionReservacionCliente(codCliente));
+		
+		if(sistema.informacionReservacionCliente(codCliente).equals("")) {
+			StdOut.println("No se presentan registros");
+		}else {
+			StdOut.println(sistema.informacionReservacionCliente(codCliente));
+		}
 	}
 	public static void opcion3(SistemaHotelero sistema) {
 		StdOut.println("************* Detalle de los trabajadores ****************");
 		StdOut.println(sistema.DesplegarRemuneraciones());
-		StdOut.println(sistema.DesplegarClientes());
+	
 	}
 	public static void menu(SistemaHotelero sistema) throws IOException, ParseException {
 		StdOut.println("Bienvenidos al sistema hotelero");
 		StdOut.println("******** Menú *****************\n 1. Reservar habitación\n 2.Opción Reservaciones\n 3.Revisar sueldos\n 4. Salir");
-		int cliente = 7;
-        StdOut.println("Ingrese una opción: ");
-        String op = StdIn.readString();
-    
+                StdOut.println("Ingrese una opción: ");
+                String op = StdIn.readString();
+                int [] listaContadores = new int[2];
+                listaContadores[0]=7;
+                listaContadores[1]=sistema.dameElCodigo();
+                
         while(!op.equals("4")) {
         	if(op.equals("1")){
-        		cliente = opcion1(sistema, cliente);
+                    
+                    listaContadores = opcion1(sistema,listaContadores);
         	}else if(op.equals("2")) {
         		opcion2(sistema);
         	}else if(op.equals("3")) {

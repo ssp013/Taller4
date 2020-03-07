@@ -1,6 +1,8 @@
 package Logica;
 import ucn.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -39,6 +41,7 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
 			Persona p =listapersonas.buscarPersona(codCliente);
 			
 			if(p!=null) {
+				
 				 if(p instanceof Cliente) {
 					 Cliente c = (Cliente) p;
             		 LinkedList<Reserva> listaReserva =  c.getListaReserva();
@@ -54,6 +57,7 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
                         }
                      }
                      if(esta==false) {
+                    	
                     	 listaReserva.add(nuevaReserva);
                      } 
 				 }
@@ -142,14 +146,23 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
 		}
 		
 	}
+
 	@Override
 	public int[] HabitacionesDisponibles(String fechaInicio, String fechaTermino) throws ParseException {
 		// TODO Auto-generated method stub
-		int i=0;
+		int cantidadElementos=0;//cantidad
 		int [] listaDisponibles = new int[100];
+		
+		
+		Iterator<Habitacion>it2 = listHabitacion.iterator();
+		while(it2.hasNext()) {
+			Habitacion hab = (Habitacion) it2.next();
+			listaDisponibles[cantidadElementos]=hab.getNumHabitacion();
+			cantidadElementos++;
+		}
 		SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 		Date fechaNuevaInicio = formato.parse(fechaInicio);
-		Date fechaNuevaSalida = formato.parse(fechaTermino);
+		Date fechaNuevaSalida = formato.parse(fechaTermino);	
 		
 		Iterator<Reserva>it = listReserva.iterator();
 		
@@ -162,17 +175,33 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
 			Date fechaAntiguaInicio = formato.parse(fechaIreserva);
 			Date fechaAntiguaTermino = formato.parse(fechaTreserva);
 			
-			//if(fechaNuevaInicio.before(fechaAntiguaInicio) && fechaNuevaSalida.before(fechaAntiguaInicio) 
-			//&& fechaNuevaInicio.after(fechaAntiguaTermino) && fechaNuevaSalida.after(fechaAntiguaTermino) ) {
-				
-				
-				listaDisponibles[i]=reserva.getNumeroHabitacion();
-				i++;
-			//}
+			LocalDateTime now = LocalDateTime.now(); 
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+			String fecha = formatter.format(now);
+			Date hoy = formato.parse(fecha);
 			
+			if(fechaNuevaInicio.compareTo(hoy)>0 || fechaNuevaInicio.compareTo(hoy)==0) {
+					if((fechaAntiguaInicio.before(fechaNuevaInicio) && fechaAntiguaTermino.before(fechaNuevaInicio)) || 
+							((fechaNuevaInicio.before(fechaAntiguaInicio) && fechaNuevaSalida.before(fechaAntiguaInicio)))){
+						String r="Disponible";
+					}else {
+						int numDisponible = reserva.getNumeroHabitacion();
+						int j;
+						for(j=0;j<listaDisponibles.length;j++) {//0 
+							if(listaDisponibles[j]==numDisponible) {
+								break;
+							}
+						}
+						for(int k=j;k<cantidadElementos-1;k++) {//3   3<2; ++1 //  0  0<2; 
+							listaDisponibles[k]=listaDisponibles[k+1];
+						}
+						cantidadElementos--;
+						cantidadElementos--;
+					}
+			}
 		}
 		return listaDisponibles;
-	}
+	}		
 	@Override
 	public String detallesHabitaciones(int[] lista) {
 		String r = "";
@@ -193,31 +222,26 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
 		return r;
 	}
 	@Override
-	public boolean crearReserva(String codCliente, int numeroHabitacion, String fechaInicio, String fechaTermino) {
-		
-		
-		Reserva t= listReserva.get(listReserva.size()-1);
-		String n = t.getCodReserva();
-		int result = Integer.valueOf(n);
-		result=result+1;
-		String codigoReservaUltimo= String.valueOf(result);
-		StdOut.println(codigoReservaUltimo);
+	public boolean crearReserva(String codigoReservaUltimo,String codCliente, int numeroHabitacion, String fechaInicio, String fechaTermino) {
+
 		Reserva nuevaReserva = new Reserva(codigoReservaUltimo,codCliente,numeroHabitacion,fechaInicio,fechaTermino);
 		Persona p = listapersonas.buscarPersona(codCliente);
 		 if(p instanceof Cliente) {
-			 Cliente c = (Cliente) p;
-    		 LinkedList<Reserva> listaReserva =  c.getListaReserva();
-            listaReserva.add(nuevaReserva);   
+                    Cliente c = (Cliente) p;
+    		    LinkedList<Reserva> listaReserva =  c.getListaReserva();
+                    listaReserva.add(nuevaReserva);   
 		 }
 		return true;
 	
 	}
+        @Override
+        public int dameElCodigo(){
+            Reserva t= listReserva.get(listReserva.size()-1);
+            String n1 = t.getCodReserva();
+            int result = Integer.valueOf(n1);
+            return result;
+        }
 
-	@Override
-	public boolean SeleccionarHabitacion(String NumHabitacion, int valorXdia, String tipo) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 	@Override
 	public String informacionReservacionCliente(String Codigo) {
 		   String resp = "";
@@ -341,25 +365,4 @@ public class SistemaHoteleroImpl implements SistemaHotelero {
          return DatosTrabajador;
         
     }
-	@Override
-	public String DesplegarClientes() {
-		String DatosTrabajador ="";
-        NodoPersona current = listapersonas.last.getNext();
-        while(current!=listapersonas.last) {
-           	Persona p = current.getPersona();
-	        	if(p instanceof Cliente) {
-	        		DatosTrabajador = DatosTrabajador+"Cod"+p.getCodigo()+"\n";	
-	        		
-	        	}
-	        	current = current.getNext();
-        	}
-        Persona p = current.getPersona();
-    	if(p instanceof Cliente) {
-    		DatosTrabajador = DatosTrabajador+"Cod"+p.getCodigo()+"\n";		
-    	}
-		return DatosTrabajador;
-		
-	}
-
-
 }
